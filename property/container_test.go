@@ -29,14 +29,16 @@ func TestContainer_Property(t *testing.T) {
 
 func TestContainer_AsJSON(t *testing.T) {
 	// GIVEN
-	const expectedJSON = `{"alarms":[{"name":"alarmA","description":"description","active":false,"severity":0,"data":"","size":0}],"properties":[{"name":"propA","description":"description","unit":"%","flags":{},"data":"","size":0}]}`
+	const expectedJSON = `{"alarms":[{"name":"alarmA","description":"description","active":false,"severity":0,"data":"","size":0},{"name":"alarmB","description":"description","active":false,"severity":0,"data":"","size":0}],"properties":[{"name":"propA","description":"description","unit":"%","flags":{},"data":"","size":0},{"name":"propB","description":"description","unit":"%","flags":{},"data":"","size":0}]}`
 	flags := *property.NewFlags()
 	container := property.Container{
 		Alarms: []property.NamedReadWriter{
 			property.NewAlarm("alarmA", "description", property.SeverityMinor),
+			property.NewAlarm("alarmB", "description", property.SeverityMinor),
 		},
 		Properties: []property.NamedReadWriter{
 			property.New("propA", "description", property.UnitPercent, false, flags),
+			property.New("propB", "description", property.UnitPercent, false, flags),
 		}}
 
 	//WHEN

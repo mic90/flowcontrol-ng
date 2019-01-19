@@ -47,20 +47,28 @@ func (c *Container) Alarm(name string) NamedReadWriter {
 func (c *Container) AsJSON() ([]byte, error) {
 	c.buffer.Reset()
 	c.buffer.WriteString(`{"alarms":[`)
+	alarmsCount := len(c.Alarms)
 	for i := range c.Alarms {
 		c.Alarms[i].MarshalEasyJSON(&c.jsonWriter)
 		_, err := c.jsonWriter.DumpTo(&c.buffer)
 		if err != nil {
 			return []byte{}, err
 		}
+		if i < alarmsCount - 1 {
+			c.buffer.WriteByte(',')
+		}
 	}
 	c.buffer.WriteString(`],`)
 	c.buffer.WriteString(`"properties":[`)
+	propertiesCount := len(c.Properties)
 	for i := range c.Properties {
 		c.Properties[i].MarshalEasyJSON(&c.jsonWriter)
 		_, err := c.jsonWriter.DumpTo(&c.buffer)
 		if err != nil {
 			return []byte{}, err
+		}
+		if i < propertiesCount - 1 {
+			c.buffer.WriteByte(',')
 		}
 	}
 	c.buffer.WriteString(`]}`)
