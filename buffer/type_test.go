@@ -54,7 +54,7 @@ func TestBuffer_MarshalJSON(t *testing.T) {
 	// GIVEN
 	buffer := New()
 	buffer.Write([]byte{1, 2, 3, 4})
-	expectedJSON := `{"raw":"AQIDBA==","Size":4}`
+	expectedJSON := `{"data":"AQIDBA==","size":4}`
 
 	// WHEN
 	resultJSON, err := json.Marshal(buffer)

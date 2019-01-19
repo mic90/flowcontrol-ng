@@ -13,7 +13,7 @@ func TestBool_Deserialize(t *testing.T) {
 
 	// WHEN
 	boolVal.Deserialize([]byte{0x01})
-	deserialized := boolVal.Value()
+	deserialized := boolVal.Value
 
 	// THEN
 	assert.Equal(t, expectedBool, deserialized)
@@ -22,7 +22,7 @@ func TestBool_Deserialize(t *testing.T) {
 func TestBool_Serialize(t *testing.T) {
 	// GIVEN
 	boolVal := NewBool()
-	boolVal.SetValue(false)
+	boolVal.Set(false)
 	expectedRaw := []byte{0x00}
 
 	// WHEN
@@ -37,7 +37,7 @@ func BenchmarkBool_Serialize(b *testing.B) {
 
 	// GIVEN
 	boolVal := NewBool()
-	boolVal.SetValue(true)
+	boolVal.Set(true)
 
 	for i := 0; i < b.N; i++ {
 		serialized := boolVal.Serialize()

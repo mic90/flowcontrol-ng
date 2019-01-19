@@ -9,7 +9,7 @@ import (
 
 type Container struct {
 	Alarms        []NamedReadWriter `json:"alarms"`
-	Properties    []NamedReadWriter `json:"properties"`
+	Parameters    []NamedReadWriter `json:"parameters"`
 	jsonWriter    jwriter.Writer
 	buffer        bytes.Buffer
 	alarmsMap     map[string]int
@@ -25,7 +25,7 @@ func NewContainer(alarms []NamedReadWriter, properties []NamedReadWriter) *Conta
 	for i := range properties {
 		propertiesMap[properties[i].GetName()] = i
 	}
-	return &Container{Alarms: alarms, Properties: properties, alarmsMap: alarmsMap, propertiesMap: propertiesMap}
+	return &Container{Alarms: alarms, Parameters: properties, alarmsMap: alarmsMap, propertiesMap: propertiesMap}
 }
 
 func (c *Container) Property(name string) NamedReadWriter {
@@ -33,7 +33,7 @@ func (c *Container) Property(name string) NamedReadWriter {
 	if !ok {
 		panic(fmt.Sprintf("Unable to find property named %s", name))
 	}
-	return c.Properties[index]
+	return c.Parameters[index]
 }
 
 func (c *Container) Alarm(name string) NamedReadWriter {
@@ -59,10 +59,10 @@ func (c *Container) AsJSON() ([]byte, error) {
 		}
 	}
 	c.buffer.WriteString(`],`)
-	c.buffer.WriteString(`"properties":[`)
-	propertiesCount := len(c.Properties)
-	for i := range c.Properties {
-		c.Properties[i].MarshalEasyJSON(&c.jsonWriter)
+	c.buffer.WriteString(`"parameters":[`)
+	propertiesCount := len(c.Parameters)
+	for i := range c.Parameters {
+		c.Parameters[i].MarshalEasyJSON(&c.jsonWriter)
 		_, err := c.jsonWriter.DumpTo(&c.buffer)
 		if err != nil {
 			return []byte{}, err
@@ -86,15 +86,15 @@ func (c *Container) FromJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	properties, ok := container["properties"]
+	properties, ok := container["parameters"]
 	if !ok {
 		return fmt.Errorf("unable to find properties value in provided data")
 	}
 	for i := range properties {
 		loadedProp := properties[i]
 
-		for innerI := range c.Properties {
-			prop := c.Properties[innerI]
+		for innerI := range c.Parameters {
+			prop := c.Parameters[innerI]
 			if prop.GetName() == loadedProp.Name {
 				written, err := prop.Write(loadedProp.Data)
 				if err != nil {

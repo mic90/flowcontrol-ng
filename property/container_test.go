@@ -29,14 +29,14 @@ func TestContainer_Property(t *testing.T) {
 
 func TestContainer_AsJSON(t *testing.T) {
 	// GIVEN
-	const expectedJSON = `{"alarms":[{"name":"alarmA","description":"description","active":false,"severity":0,"data":"","size":0},{"name":"alarmB","description":"description","active":false,"severity":0,"data":"","size":0}],"properties":[{"name":"propA","description":"description","unit":"%","flags":{},"data":"","size":0},{"name":"propB","description":"description","unit":"%","flags":{},"data":"","size":0}]}`
+	const expectedJSON = `{"alarms":[{"name":"alarmA","description":"description","active":false,"severity":0,"data":"","size":0},{"name":"alarmB","description":"description","active":false,"severity":0,"data":"","size":0}],"parameters":[{"name":"propA","description":"description","unit":"%","flags":{},"data":"","size":0},{"name":"propB","description":"description","unit":"%","flags":{},"data":"","size":0}]}`
 	flags := *property.NewFlags()
 	container := property.Container{
 		Alarms: []property.NamedReadWriter{
 			property.NewAlarm("alarmA", "description", property.SeverityMinor),
 			property.NewAlarm("alarmB", "description", property.SeverityMinor),
 		},
-		Properties: []property.NamedReadWriter{
+		Parameters: []property.NamedReadWriter{
 			property.New("propA", "description", property.UnitPercent, false, flags),
 			property.New("propB", "description", property.UnitPercent, false, flags),
 		}}
@@ -50,14 +50,14 @@ func TestContainer_AsJSON(t *testing.T) {
 
 func TestContainer_FromJSON(t *testing.T) {
 	// GIVEN
-	const sourceJSON = `{"alarms":[{"name":"alarmA","description":"description","unit":"%","flags":{},"data":"ZA==","size":1}],"properties":[{"name":"propA","description":"description","unit":"%","flags":{},"data":"ZA==","size":1}]}`
+	const sourceJSON = `{"alarms":[{"name":"alarmA","description":"description","unit":"%","flags":{},"data":"ZA==","size":1}],"parameters":[{"name":"propA","description":"description","unit":"%","flags":{},"data":"ZA==","size":1}]}`
 	flags := *property.NewFlags()
 	diffValue := property.New("propA", "description", property.UnitPercent, false, flags)
 	container := property.Container{
 		Alarms: []property.NamedReadWriter{
 			property.New("alarmA", "description", property.UnitPercent, false, flags),
 		},
-		Properties: []property.NamedReadWriter{
+		Parameters: []property.NamedReadWriter{
 			diffValue,
 		}}
 
@@ -70,7 +70,7 @@ func TestContainer_FromJSON(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, []byte{100}, diffValue.Data)
-	assert.Equal(t, 1, len(container.Properties))
+	assert.Equal(t, 1, len(container.Parameters))
 	assert.Equal(t, 1, len(container.Alarms))
 }
 
@@ -85,7 +85,7 @@ func BenchmarkContainer_AsJSON(b *testing.B) {
 			property.NewAlarm("alarmB", "descriptionA", property.SeverityMinor),
 			property.NewAlarm("alarmC", "descriptionB", property.SeverityMinor),
 		},
-		Properties: []property.NamedReadWriter{
+		Parameters: []property.NamedReadWriter{
 			property.New("propA", "description", property.UnitPercent, false, flags),
 			property.New("propB", "descriptionA", property.UnitPercent, false, flags),
 			property.New("propC", "descriptionB", property.UnitPercent, false, flags),

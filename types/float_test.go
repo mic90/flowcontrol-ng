@@ -13,7 +13,7 @@ func TestFloat_Deserialize(t *testing.T) {
 
 	// WHEN
 	floatVal.Deserialize([]byte{0x73, 0x8c, 0x42, 0x46})
-	deserialized := floatVal.Value()
+	deserialized := floatVal.Value
 
 	// THEN
 	assert.Equal(t, expectedFloat, deserialized)
@@ -22,7 +22,7 @@ func TestFloat_Deserialize(t *testing.T) {
 func TestFloat_Serialize(t *testing.T) {
 	// GIVEN
 	floatVal := NewFloat()
-	floatVal.SetValue(12451.112)
+	floatVal.Set(12451.112)
 	expectedRaw := []byte{0x73, 0x8c, 0x42, 0x46}
 
 	// WHEN
@@ -37,7 +37,7 @@ func BenchmarkFloat_Serialize(b *testing.B) {
 
 	// GIVEN
 	floatVal := NewFloat()
-	floatVal.SetValue(12451.112)
+	floatVal.Set(12451.112)
 
 	for i := 0; i < b.N; i++ {
 		serialized := floatVal.Serialize()

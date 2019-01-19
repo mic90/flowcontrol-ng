@@ -2,6 +2,7 @@ package property
 
 import (
 	"github.com/mic90/flowcontrol-ng/buffer"
+	"github.com/mic90/flowcontrol-ng/types"
 )
 
 type Alarm struct {
@@ -42,10 +43,23 @@ func (p *Alarm) Write(data []byte) (int, error) {
 	if len(data) < 1 {
 		return written, nil
 	}
-	if data[0] == 0 {
-		p.Active = false
-	} else {
-		p.Active = true
-	}
+	p.Active = bytesToBool(data)
 	return written, nil
+}
+
+func (p *Alarm) WriteTyped(src types.Serializer) (int, error) {
+	written, err := p.Type.WriteTyped(src)
+	if err != nil {
+		return written, err
+	}
+	bytes := src.Serialize()
+	p.Active = bytesToBool(bytes)
+	return written, nil
+}
+
+func bytesToBool(data []byte) bool {
+	if data[0] == 0 {
+		return false
+	}
+	return true
 }
